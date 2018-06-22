@@ -18,7 +18,7 @@ class AbstractSerializer(metaclass=ABCMeta):
         """
         Serialize credentails.
 
-        If serialization fails, the function should throw SerializationFailed
+        If serialization fails, the method should throw SerializationFailed
         exception.
 
         The exception is not allowed to contain any data except the name of

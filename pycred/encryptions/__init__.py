@@ -18,7 +18,7 @@ class AbstractEncryption(metaclass=ABCMeta):
         """
         Encrypt data.
 
-        If encryption fails, the function should throw EncryptionFailed exception.
+        If encryption fails, the method should throw EncryptionFailed exception.
 
         The exception is not allowed to contain any data except the name of
         the ecnryption class.
@@ -30,7 +30,7 @@ class AbstractEncryption(metaclass=ABCMeta):
         """
         Decrypt encrypted data to clear.
 
-        If decryption fails, the function should throw DecryptionFailed exception.
+        If decryption fails, the method should throw DecryptionFailed exception.
 
         The exception is not allowed to contain any data except the name of
         the ecnryption class.

@@ -23,12 +23,12 @@ class TestJsonSerializer(unittest.TestCase):
         self.assertEqual('USERNAME', result.username)
         self.assertEqual('PASSWORD', result.password)
 
-    def test_throws_invalid_data_format_if_deserialization_fails(self):
+    def test_raises_invalid_data_format_if_deserialization_fails(self):
         s = JsonSerializer()
         with self.assertRaises(DeserializationFailed):
             s.deserialize("invalid")
 
-    def test_throws_failed_serialization_if_serialization_fails(self):
+    def test_raises_failed_serialization_if_serialization_fails(self):
         s = JsonSerializer()
         with self.assertRaises(SerializationFailed):
             s.serialize("invalid")
