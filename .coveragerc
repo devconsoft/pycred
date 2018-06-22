@@ -1,0 +1,7 @@
+
+[report]
+omit =
+    */site-packages/*
+    */test/*
+
+show_missing = True

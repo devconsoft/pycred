@@ -1,3 +1,5 @@
+import sys
+
 import click
 
 from . import DEFAULT_CONTEXT_SETTINGS
@@ -18,5 +20,5 @@ def help(ctx, html, pdf, print_path):
     try:
         openhelp(html, pdf, print_path)
     except Exception as e:
-        print('Error: {msg}'.format(msg=str(e)))
-        exit(1)
+        print('Error: {msg}'.format(msg=str(e)), file=sys.stderr)
+        sys.exit(1)
