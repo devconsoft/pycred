@@ -1,0 +1,24 @@
+log.warning: [nose]
+
+plugins.paths:
+  - systest/plugins
+
+ext.default.enabled: false
+ext.click.enabled: true
+ext.runcommand.enabled: true
+ext.testrunner.enabled: true
+ext.configurationvalidator.enabled: true
+ext.logger.enabled: true
+ext.output.enabled: true
+ext.filelogger.enabled: true
+ext.logdefaults.enabled: true
+ext.testfinder.enabled: true
+ext.testscheduler.enabled: true
+ext.testresults.enabled: true
+ext.textreport.enabled: true
+ext.testngreport.enabled: true
+
+logdefaults.enabled: true
+ext.pycredcomponent.enabled: true
+
+log.info: [k2.extension.pycredcomponent]

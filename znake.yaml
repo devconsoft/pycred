@@ -1,0 +1,68 @@
+znake:
+  info:
+    package: pycred
+    maintainer: Per Böhlin
+    maintainer_email: per.bohlin@devconsoft.se
+    short_description: Store user credentials
+    long_description: |
+      PyCred is an application and python3 library that allow storing and retrieving
+      user credentials for multiple systems.
+    changelog:
+      - version: 0.0.1
+        changes:
+          - "First draft"
+        date: Fri, 22 Jun 2018 12:00:00 +0000
+  license: '© 2018 DevConSoft All rights reserved, or under MIT license'
+  classifiers:
+    - 'Development Status :: 3 - Alpha'
+    - 'Intended Audience :: Developers'
+    - 'License :: MIT'
+    - 'Programming Language :: Python :: 3.4'
+    - 'Programming Language :: Python :: 3.5'
+    - 'Programming Language :: Python :: 3.6'
+  keywords: []
+  entry_points:
+    console_scripts:
+      - 'pycred = pycred.ui.__main__:main'
+  requirements:
+    - click==6.7
+    - coloredlogs==5.1.1
+    - untangle==1.1.1
+  static:
+    packages:
+      - pycred
+  deb:
+    package: pycred
+    dependencies:
+    doc:
+      - user_guide
+    links:
+      - target: /opt/venvs/pycred/bin/pycred
+        link: /usr/bin/pycred
+    include:
+      - source: znaketools/pycred-bash-completion.sh
+        target: /etc/bash_completion.d/
+  doc:
+    targets:
+      - guide: user_guide
+  test:
+    packages:
+      - pycred
+  systest:
+    packages:
+      - systest.tests
+    vars:
+      config_file: systest/systest_config.yaml
+  debtest:
+    packages:
+      - systest.tests
+      - systest.debtests
+    vars:
+      config_file: systest/systest_config.yaml
+dependencies:
+  "{build_dir}/doc/user_guide/html":
+    - doc/user_guide/**
+    - pycred/**
+  "{build_dir}/doc/user_guide/pdf":
+    - doc/user_guide/**
+    - pycred/**
