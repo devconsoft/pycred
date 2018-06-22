@@ -11,6 +11,7 @@ user credentials for multiple systems.
     :includehidden:
 
     intro
+    architecture/index
 
 Indices and tables
 ==================

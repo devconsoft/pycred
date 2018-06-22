@@ -1,0 +1,51 @@
+@startuml
+
+title PyCred Architecture Overview
+
+package Classes <<frame>> {
+
+    class PyCred {
+        get_store(name) : Store
+    }
+
+    class Credentials {
+        username
+        password
+    }
+
+    class Store {
+        Serializer serializer
+        Encryption encryption
+        Storage storage
+        Store(config) : Store
+        get_credentials(user) : Credentials
+    }
+
+    class Factory {
+        get_serializer(config) : Serializer
+        get_encryption(config) : Encryption
+        get_storage(config) : Storage
+    }
+
+}
+
+package "Interfaces" <<frame>> {
+
+    interface Serializer {
+        serialize(credentials) : data
+        deserialize(data) : Credentials
+    }
+
+    interface Encryption {
+        encrypt(data) : encrypted_data
+        decrypt(encrypted_data) : data
+    }
+
+    interface Storage {
+        get_data(user) : data
+        set_data(user, data)
+    }
+
+}
+
+@enduml

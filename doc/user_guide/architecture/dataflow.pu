@@ -1,0 +1,72 @@
+@startuml
+
+title PyCred Data Flow
+
+actor Application as app
+participant PyCred as pycred
+database Config as config
+database "Store Config" as storeconfig
+box "Credential-Store"
+participant "Store" as store
+participant "Storage Backend" as storage
+participant "Encryption Backend" as encrypt
+participant "Serializer Backend" as serializer
+end box
+
+== initilize store ==
+
+app -> pycred : initilize("store")
+activate pycred
+
+pycred -> config : get location of storage-configs
+activate config
+pycred <- config: location of storage-configs
+deactivate config
+
+pycred -> storeconfig : get_config("store")
+activate storeconfig
+pycred <- storeconfig : <config>
+deactivate storeconfig
+
+pycred -> store : initilize(<config>)
+activate store
+store -> storage : initilize(<config>)
+activate storage
+store -> encrypt : initilize(<config>)
+activate encrypt
+store -> serializer : initilize(<config>)
+activate serializer
+
+app <- pycred : <store>
+deactivate pycred
+
+== get credentials for user ==
+
+app -> store: get_credentials("user")
+activate store #gray
+
+store -> storage : get_data("user")
+activate storage #gray
+store <- storage : <encrypted-data>
+deactivate storage
+
+store -> encrypt : decrypt(<encrypted-data>)
+activate encrypt #gray
+store <- encrypt : <data>
+deactivate encrypt
+
+store -> serializer : deserialize(<data>)
+activate serializer #gray
+store <- serializer : <credentials(username, password)>
+deactivate serializer
+
+app <- store : <credentials(username, password)>
+deactivate store
+
+deactivate store
+deactivate storage
+deactivate encrypt
+deactivate serializer
+
+
+@enduml

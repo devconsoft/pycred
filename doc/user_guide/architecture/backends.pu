@@ -1,0 +1,19 @@
+@startuml
+
+title PyCred Backends
+
+frame "Storage Backends" {
+    [File]
+}
+
+frame "Encryption Backends" {
+    ["User RSA ID"]
+    ["Application key"]
+}
+
+frame "Format Backends" {
+    [JSON]
+}
+
+
+@enduml
