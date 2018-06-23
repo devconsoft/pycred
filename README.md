@@ -1,5 +1,8 @@
 # PyCred
 
+WORK IN PROGRESS!!!
+The library is not yet in a workable state. Do not use!
+
 PyCred is an application and python3 library that allow storing and retrieving
 user credentials for multiple systems.
 
