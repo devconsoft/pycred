@@ -1,9 +1,10 @@
 import unittest
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
-from ..pycred import get_store
 from ..credentials import Credentials
+from ..pycred import get_store
 from ..storages.memory import MemoryStorage
+
 
 class TestPyCredLib(unittest.TestCase):
 
@@ -17,3 +18,6 @@ class TestPyCredLib(unittest.TestCase):
             result = store.get_credentials(user)
             self.assertEqual(cred.username, result.username)
             self.assertEqual(cred.password, result.password)
+
+    def xtest_clear_json_file(self):
+        assert False, "not implemented"

@@ -1,5 +1,4 @@
 import unittest
-from io import StringIO
 from unittest.mock import mock_open, patch
 
 from .. import GetDataFailed, SetDataFailed
@@ -22,7 +21,6 @@ class TestFileStorage(unittest.TestCase):
             s.set_data('user', self.data)
             m.assert_called_with('data_dir/user.dat', 'w')
             m().write.assert_called_with(self.data)
-
 
     def test_raises_get_data_failed(self):
         s = FileStorage('/invalid/random/path')

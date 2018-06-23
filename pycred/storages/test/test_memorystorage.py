@@ -1,8 +1,6 @@
 import unittest
-from io import StringIO
-from unittest.mock import mock_open, patch
 
-from .. import GetDataFailed, SetDataFailed
+from .. import GetDataFailed
 from ..memory import MemoryStorage
 
 

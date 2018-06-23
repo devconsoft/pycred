@@ -1,8 +1,7 @@
-import inspect
 import os
 import subprocess
 
-import pycred
+from .paths import get_doc_dir
 
 
 class MultipleFormats(Exception):
@@ -14,7 +13,7 @@ class FailedToOpenHelp(Exception):
 
 
 def openhelp(html, pdf, print_path):
-    root = _get_doc_root()
+    root = get_doc_dir()
     path = None
 
     if pdf and html:
@@ -38,12 +37,3 @@ def _open_with_application(filepath):
         raise FailedToOpenHelp(
             "Failed when trying to use 'xdg-open' to open '{path}': {msg}".format(
                 path=filepath, msg=str(e)))
-
-
-def _get_doc_root():
-    path = inspect.getfile(pycred)
-
-    if path.startswith('/opt/venvs/pycred/'):
-        return '/opt/venvs/pycred/doc'
-    else:
-        return os.path.join(path.replace('pycred/__init__.py', ''), 'build/doc')

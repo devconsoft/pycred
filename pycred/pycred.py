@@ -1,6 +1,7 @@
 from .factory import Factory
 from .store import Store
 
+
 def get_store(name):
     """
     Get credentials-store.
