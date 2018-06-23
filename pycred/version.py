@@ -2,7 +2,7 @@
 from textwrap import dedent
 
 __version__ = '0.0.1+0'
-__updated__ = '2018-06-22'
+__updated__ = '2018-06-24'
 deb_package_name = 'pycred'
 description = 'Store user credentials'
 long_description = dedent('''\\

@@ -1,5 +1,5 @@
+from .config import get_pycred_config, get_store_config
 from .factory import Factory
-from .store import Store
 
 
 def get_store(name):
@@ -9,9 +9,7 @@ def get_store(name):
     :param name: name of store to retrieve.
     :return: Store
     """
+    pycred_config = get_pycred_config()
+    store_config = get_store_config(pycred_config.store_path, name)
     factory = Factory()
-    storage = factory.get_storage()
-    encryption = factory.get_encryption()
-    serializer = factory.get_serializer()
-    store = Store(serializer, encryption, storage)
-    return store
+    return factory.get_store(store_config)

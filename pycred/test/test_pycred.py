@@ -1,23 +1,24 @@
 import unittest
 from unittest.mock import patch
 
+from ..config import BackendConfig, StoreConfig
 from ..credentials import Credentials
 from ..pycred import get_store
-from ..storages.memory import MemoryStorage
 
 
 class TestPyCredLib(unittest.TestCase):
 
-    def test_get_store(self):
-        mem = MemoryStorage()
-        with patch('pycred.factory.Factory.get_storage', return_value=mem):
+    def test_get_json_clear_memory_store(self):
+        serializer = BackendConfig('json', {})
+        encryption = BackendConfig('clear', {})
+        storage = BackendConfig('memory', {})
+        store_config = StoreConfig('store', serializer, encryption, storage)
+        with patch('pycred.pycred.get_pycred_config'), \
+                patch('pycred.pycred.get_store_config', return_value=store_config):
             user = 'user'
             cred = Credentials('USERNAME', 'PASSWORD')
-            mem.set_data(user, '["USERNAME", "PASSWORD"]')
             store = get_store('store')
+            store.set_credentials(user, cred)
             result = store.get_credentials(user)
             self.assertEqual(cred.username, result.username)
             self.assertEqual(cred.password, result.password)
-
-    def xtest_clear_json_file(self):
-        assert False, "not implemented"

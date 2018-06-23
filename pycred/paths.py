@@ -13,12 +13,17 @@ def get_pycred_dir():
 @lru_cache(maxsize=1)
 def get_doc_dir():
     path = get_pycred_dir()
-    if path.startswith('/opt/venvs/pycred/'):
+    if path.startswith('/opt/venvs/pycred'):
         return '/opt/venvs/pycred/doc'
     else:
         return join(dirname(path), 'build', 'doc')
 
 
 @lru_cache(maxsize=1)
-def get_config_dir():
-    pass
+def get_config_filepath():
+    path = get_pycred_dir()
+    return join(path, '.config.yaml')
+
+
+def get_store_config_filename(store_config_dir, store_name):
+    return join(store_config_dir, "{name}.yaml".format(name=store_name))

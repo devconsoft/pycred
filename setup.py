@@ -49,7 +49,8 @@ setup(
     install_requires=[
         'click',
         'coloredlogs',
-        'untangle',
+        'ruamel.yaml',
+        'py',
     ],
 
     entry_points={
@@ -61,6 +62,7 @@ setup(
     
 
     package_data={
+        'pycred': ['pycred/.config.yaml'],
     },
 
 )

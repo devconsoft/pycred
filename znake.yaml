@@ -27,7 +27,12 @@ znake:
   requirements:
     - click==6.7
     - coloredlogs==5.1.1
-    - untangle==1.1.1
+    - ruamel.yaml==0.15.40
+    - py==1.5.3
+  package_data:
+    - package: pycred
+      include:
+          - pycred/.config.yaml
   static:
     packages:
       - pycred

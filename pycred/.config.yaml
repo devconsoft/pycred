@@ -1,0 +1,22 @@
+---
+!PyCredConfig
+encryptions: !PyCredBackendDefaultConfig
+  default: 'clear'
+  backends:
+  - !BackendConfig
+    data: {}
+    name: 'clear'
+serializers: !PyCredBackendDefaultConfig
+  default: 'json'
+  backends:
+  - !BackendConfig
+    data: {}
+    name: 'json'
+storages: !PyCredBackendDefaultConfig
+  backends:
+  - !BackendConfig
+    data:
+      path: '~/.pycred/data/storage/file'
+    name: 'file'
+  default: 'file'    
+store_path: '~/.pycred/store'
