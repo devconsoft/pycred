@@ -1,4 +1,9 @@
+import logging
+
 from . import AbstractEncryption
+
+logger = logging.getLogger('ClearEncryption')
+logger.addHandler(logging.NullHandler())
 
 
 class ClearEncryption(AbstractEncryption):
@@ -8,3 +13,6 @@ class ClearEncryption(AbstractEncryption):
 
     def decrypt(self, encrypted_data):
         return encrypted_data
+
+    def delete(self):
+        logger.debug("Deleted")

@@ -38,3 +38,8 @@ class AbstractSerializer(metaclass=ABCMeta):
         serializing class.
         """
         pass
+
+    @abstractmethod
+    def delete(self):
+        """Delete any permanent resources associated with the instance."""
+        pass

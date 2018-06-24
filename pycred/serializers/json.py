@@ -1,8 +1,12 @@
 import json
+import logging
 
 from pycred.credentials import Credentials
 
 from . import AbstractSerializer, DeserializationFailed, SerializationFailed
+
+logger = logging.getLogger('JsonSerializer')
+logger.addHandler(logging.NullHandler())
 
 
 class JsonSerializer(AbstractSerializer):
@@ -20,3 +24,6 @@ class JsonSerializer(AbstractSerializer):
             return Credentials(deserialized[0], deserialized[1])
         except Exception:
             raise DeserializationFailed('JsonSerializer')
+
+    def delete(self):
+        logger.debug("Deleted")

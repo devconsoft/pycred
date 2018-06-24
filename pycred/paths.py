@@ -1,4 +1,5 @@
 import inspect
+import os
 from functools import lru_cache
 from os.path import dirname, join
 
@@ -19,11 +20,5 @@ def get_doc_dir():
         return join(dirname(path), 'build', 'doc')
 
 
-@lru_cache(maxsize=1)
 def get_config_filepath():
-    path = get_pycred_dir()
-    return join(path, '.config.yaml')
-
-
-def get_store_config_filename(store_config_dir, store_name):
-    return join(store_config_dir, "{name}.yaml".format(name=store_name))
+    return os.environ.get('PYCRED_CONFIG_FILE', join(get_pycred_dir(), '.config.yaml'))

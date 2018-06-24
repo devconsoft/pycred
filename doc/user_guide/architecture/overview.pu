@@ -2,7 +2,7 @@
 
 title PyCred Architecture Overview
 
-package Classes <<frame>> {
+package "Main Classes" <<frame>> {
 
     class PyCred {
         get_store(name) : Store
@@ -17,7 +17,6 @@ package Classes <<frame>> {
         Serializer serializer
         Encryption encryption
         Storage storage
-        Store(config) : Store
         get_credentials(user) : Credentials
     }
 
@@ -25,11 +24,17 @@ package Classes <<frame>> {
         get_serializer(config) : Serializer
         get_encryption(config) : Encryption
         get_storage(config) : Storage
+        get_store(config) : Store
+    }
+
+    class ConfigurationManager {
+        get_pycred_config() : PyCredConfig
+        get_store_config(name): StoreConfig
     }
 
 }
 
-package "Interfaces" <<frame>> {
+package "Backend Types" <<frame>> {
 
     interface Serializer {
         serialize(credentials) : data

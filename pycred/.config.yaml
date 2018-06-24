@@ -16,7 +16,10 @@ storages: !PyCredBackendDefaultConfig
   backends:
   - !BackendConfig
     data:
-      path: '~/.pycred/data/storage/file'
+      data_dir: '~/.pycred/data/storage/file'
     name: 'file'
-  default: 'file'    
+  - !BackendConfig
+    data: {}
+    name: 'memory'
+  default: 'file'
 store_path: '~/.pycred/store'

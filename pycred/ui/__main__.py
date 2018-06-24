@@ -7,6 +7,9 @@ import pycred
 
 from . import DEFAULT_CONTEXT_SETTINGS
 from .help import help
+from .init import init
+from .list import liststores
+from .rm import rm
 
 
 @click.group(context_settings=DEFAULT_CONTEXT_SETTINGS)
@@ -19,12 +22,17 @@ from .help import help
 @click.version_option(pycred.__version__)
 @click.pass_context
 def main(ctx, verbose):
-    """Interact with pycred credentials storage."""
+    """Interact with pycred, its stores and configuration."""
     verbosity_levels = (logging.WARNING, logging.INFO, logging.DEBUG)
-    coloredlogs.install(level=verbosity_levels[verbose])
+    level = verbosity_levels[verbose]
+    fmt = '%(asctime)s %(name)s %(levelname)s %(message)s'
+    coloredlogs.install(level=level, fmt=fmt)
 
 
 main.add_command(help)
+main.add_command(init)
+main.add_command(liststores)
+main.add_command(rm)
 
 if __name__ == '__main__':
     main()

@@ -1,8 +1,9 @@
+import os
 from functools import lru_cache
 
 from ruamel.yaml import YAML
 
-from .paths import get_config_filepath, get_store_config_filename
+from .paths import get_config_filepath
 
 
 class BackendConfig(object):
@@ -56,6 +57,28 @@ class PyCredBackendDefaultConfig(object):
         self.default = default
         self.backends = backends
 
+    def get_backend(self, name):
+        """
+        Get backend by name; returns None if not found.
+
+        If name is None, default is used as name.
+
+        :param name: Name of backend to retrieve.
+        :returns: BackendConfig
+        """
+        result = None
+        if name is None:
+            name = self.default
+
+        for be in self.backends:
+            if be.name == name:
+                result = be
+                break
+        return result
+
+    def get_backend_names(self):
+        return [be.name for be in self.backends]
+
 
 class PyCredConfig(object):
 
@@ -75,79 +98,103 @@ class PyCredConfig(object):
         self.encryptions = encryptions
         self.storages = storages
 
+    def get_store_path(self):
+        path = os.environ.get('PYCRED_STORE_PATH', self.store_path)
+        return os.path.expanduser(path)
+
 
 DEFAULT_PYCRED_CONFIG = PyCredConfig(
-    '~/.pycred/store', PyCredBackendDefaultConfig('json', BackendConfig('json', {})),
-    PyCredBackendDefaultConfig('clear', BackendConfig('clear', {})),
+    '~/.pycred/store', PyCredBackendDefaultConfig('json', [BackendConfig('json', {})]),
+    PyCredBackendDefaultConfig('clear', [BackendConfig('clear', {})]),
     PyCredBackendDefaultConfig(
-        'file', BackendConfig('file', {
-            'path': '~/.pycred/data/storage/file'
-        })))
+        'file', [
+            BackendConfig('file', {
+                'data_dir': '~/.pycred/data/storage/file'
+            }),
+            BackendConfig('memory', {})
+        ]))
 
 
-@lru_cache(maxsize=1)
-def get_pycred_config_file_parser():
-    yaml = YAML(typ='unsafe')
-    yaml.register_class(PyCredConfig)
-    yaml.register_class(PyCredBackendDefaultConfig)
-    yaml.register_class(BackendConfig)
-    return yaml
+class ConfigurationManager(object):
 
+    @lru_cache(maxsize=1)
+    def get_pycred_config_file_parser(self):
+        yaml = YAML(typ='unsafe')
+        yaml.register_class(PyCredConfig)
+        yaml.register_class(PyCredBackendDefaultConfig)
+        yaml.register_class(BackendConfig)
+        return yaml
 
-@lru_cache(maxsize=1)
-def get_store_config_file_parser():
-    yaml = YAML(typ='unsafe')
-    yaml.register_class(StoreConfig)
-    yaml.register_class(BackendConfig)
-    return yaml
+    @lru_cache(maxsize=1)
+    def get_store_config_file_parser(self):
+        yaml = YAML(typ='unsafe')
+        yaml.register_class(StoreConfig)
+        yaml.register_class(BackendConfig)
+        return yaml
 
+    def get_pycred_config(self):
+        """
+        Get PyCred configuration.
 
-def get_pycred_config():
-    """
-    Get PyCred configuration.
+        :returns: PyCredConfig
+        """
+        path = get_config_filepath()
+        parser = self.get_pycred_config_file_parser()
+        with open(path, 'r') as f:
+            result = parser.load(f)
+            return result if result is not None else DEFAULT_PYCRED_CONFIG
 
-    :returns: PyCredConfig
-    """
-    path = get_config_filepath()
-    parser = get_pycred_config_file_parser()
-    with open(path, 'r') as f:
-        result = parser.load(f)
-        return result if result is not None else DEFAULT_PYCRED_CONFIG
+    def save_pycred_config(self, config):
+        """
+        Save PyCred configuration to file.
 
+        :param config: PyCredConfig
+        """
+        path = get_config_filepath()
+        parser = self.get_pycred_config_file_parser()
+        with open(path, 'w') as f:
+            parser.dump(config, f)
 
-def save_pycred_config(config):
-    """
-    Save PyCred configuration to file.
+    def get_store_config(self, store_name):
+        """
+        Get Store configuration.
 
-    :param config: PyCredConfig
-    """
-    path = get_config_filepath()
-    parser = get_pycred_config_file_parser()
-    with open(path, 'w') as f:
-        parser.dump(config, f)
+        :param store_config_dir: Path to store configurations directory.
+        :returns: StoreConfig
+        """
+        parser = self.get_store_config_file_parser()
+        path = self.get_store_config_filename(store_name)
+        with open(path, 'r') as f:
+            return parser.load(f)
 
+    def save_store_config(self, config):
+        """
+        Save store configuration to file.
 
-def get_store_config(store_config_dir, store_name):
-    """
-    Get Store configuration.
+        :param store_config_dir: Path to store configurations directory.
+        :param config: StoreConfig
+        """
+        parser = self.get_store_config_file_parser()
+        path = self.get_store_config_filename(config.name)
+        with open(path, 'w') as f:
+            parser.dump(config, f)
 
-    :param store_config_dir: Path to store configurations directory.
-    :returns: StoreConfig
-    """
-    parser = get_store_config_file_parser()
-    path = get_store_config_filename(store_config_dir, store_name)
-    with open(path, 'r') as f:
-        return parser.load(f)
+    def create_store_config(self, name, serializer, encryption, storage):
+        """
+        Create a StoreConfig instance, using provided backend names and pycred defaults.
 
+        :param name: Name of the store.
+        :param serializer: Name of the serializer type.
+        :param encryption: Name of the encryption type.
+        :param storage: Name of the storage type.
+        :returns: StoreConfig
+        """
+        pycred_config = self.get_pycred_config()
+        serializer_config = pycred_config.serializers.get_backend(serializer)
+        encryption_config = pycred_config.encryptions.get_backend(encryption)
+        storage_config = pycred_config.storages.get_backend(storage)
+        return StoreConfig(name, serializer_config, encryption_config, storage_config)
 
-def save_store_config(store_config_dir, config):
-    """
-    Save store configuration to file.
-
-    :param store_config_dir: Path to store configurations directory.
-    :param config: StoreConfig
-    """
-    parser = get_store_config_file_parser()
-    path = get_store_config_filename(store_config_dir, config.name)
-    with open(path, 'w') as f:
-        parser.dump(config, f)
+    def get_store_config_filename(self, store_name):
+        store_config_dir = self.get_pycred_config().get_store_path()
+        return os.path.join(store_config_dir, "{name}.yaml".format(name=store_name))

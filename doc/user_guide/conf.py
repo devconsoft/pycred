@@ -16,11 +16,16 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
+import glob
 import os
 import sys
+
 sys.path.insert(0, os.path.abspath('../..'))
 from pycred.version import __version__
 
+site_packages_glob = os.sep.join([os.path.abspath('../..'), '.venv','lib', 'python3.*', 'site-packages'])
+site_packages = glob.glob(site_packages_glob)[-1]
+sys.path.insert(0, site_packages)
 
 # -- General configuration ------------------------------------------------
 
@@ -32,6 +37,7 @@ from pycred.version import __version__
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['sphinx.ext.autodoc',
+    'sphinx.ext.autosectionlabel',
     'sphinx.ext.todo',
     'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
@@ -162,6 +168,8 @@ texinfo_documents = [
      'Miscellaneous'),
 ]
 
+# -- Options for sphinx.ext.autosectionlabel -----------------------------
+autosectionlabel_prefix_document = True
 
 
 # -- Plantuml ------------------------------------------------------------

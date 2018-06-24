@@ -6,6 +6,15 @@ from ..store import Store
 
 class TestStore(unittest.TestCase):
 
+    def test_store_sets_store_attribute_on_its_backends(self):
+        storage = MagicMock()
+        encryption = MagicMock()
+        serializer = MagicMock()
+        store = Store('name', serializer, encryption, storage)
+        self.assertIs(storage.store, store)
+        self.assertIs(encryption.store, store)
+        self.assertIs(serializer.store, store)
+
     def test_get_credentials(self):
         storage = MagicMock()
         storage.get_data = MagicMock(return_value='encrypted_data')
@@ -35,3 +44,13 @@ class TestStore(unittest.TestCase):
         serializer.serialize.assert_called_with('credentials')
         encryption.encrypt.assert_called_with('data')
         storage.set_data.assert_called_with('user', 'encrypted_data')
+
+    def test_delete(self):
+        storage = MagicMock()
+        encryption = MagicMock()
+        serializer = MagicMock()
+        store = Store('name', serializer, encryption, storage)
+        store.delete()
+        storage.delete.assert_called_once_with()
+        encryption.delete.assert_called_once_with()
+        serializer.delete.assert_called_once_with()

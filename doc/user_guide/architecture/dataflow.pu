@@ -4,38 +4,48 @@ title PyCred Data Flow
 
 actor Application as app
 participant PyCred as pycred
-database Config as config
+participant "Configuration Manager" as cm
+participant "Factory" as factory
+database "PyCred Config" as config
 database "Store Config" as storeconfig
-box "Credential-Store"
+box "Store"
 participant "Store" as store
-participant "Storage Backend" as storage
-participant "Encryption Backend" as encrypt
-participant "Serializer Backend" as serializer
+participant "Storage" as storage
+participant "Encryption" as encrypt
+participant "Serializer" as serializer
 end box
 
 == initilize store ==
 
-app -> pycred : initilize("store")
+app -> pycred : get store ("store")
 activate pycred
 
-pycred -> config : get location of storage-configs
+pycred -> cm: get store config ("store")
+activate cm
+
+cm -> config : get store_path
 activate config
-pycred <- config: location of storage-configs
+cm <- config : store_path
 deactivate config
-
-pycred -> storeconfig : get_config("store")
+cm -> storeconfig : get store config (store_path, "store")
 activate storeconfig
-pycred <- storeconfig : <config>
+cm <- storeconfig : <store config>
 deactivate storeconfig
+pycred <- cm: <store config>
+deactivate cm
 
-pycred -> store : initilize(<config>)
-activate store
-store -> storage : initilize(<config>)
+pycred -> factory: get store (<store config>)
+activate factory
+factory -> storage : initilize(<config>)
 activate storage
-store -> encrypt : initilize(<config>)
+factory -> encrypt : initilize(<config>)
 activate encrypt
-store -> serializer : initilize(<config>)
+factory -> serializer : initilize(<config>)
 activate serializer
+factory -> store : initilize(<config>)
+activate store
+pycred <- factory: <store>
+deactivate factory
 
 app <- pycred : <store>
 deactivate pycred

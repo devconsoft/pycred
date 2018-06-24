@@ -46,3 +46,8 @@ class AbstractStorage(metaclass=ABCMeta):
         the storage class.
         """
         pass
+
+    @abstractmethod
+    def delete(self):
+        """Delete any permanent resources associated with the instance."""
+        pass

@@ -1,6 +1,6 @@
 
-PyCred User Guide!
-==================
+PyCred User Guide
+=================
 PyCred is an application and python3 library that allow storing and retrieving
 user credentials for multiple systems.
 
@@ -11,6 +11,9 @@ user credentials for multiple systems.
     :includehidden:
 
     intro
+    usage/index
+    config
+    environ
     architecture/index
 
 Indices and tables

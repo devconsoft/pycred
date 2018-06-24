@@ -1,12 +1,18 @@
+import logging
 import os
+import shutil
 
 from . import AbstractStorage, GetDataFailed, SetDataFailed
+
+logger = logging.getLogger('FileStorage')
+logger.addHandler(logging.NullHandler())
 
 
 class FileStorage(AbstractStorage):
 
     def __init__(self, data_dir):
         self.data_dir = data_dir
+        self.store = None  # Set by Store
 
     def get_data(self, user):
         try:
@@ -25,4 +31,10 @@ class FileStorage(AbstractStorage):
             raise SetDataFailed('FileStorage')
 
     def get_path(self, user):
-        return os.path.join(self.data_dir, "{name}.dat".format(name=user))
+        return os.path.join(self.data_dir, self.store.name ,"{name}.dat".format(name=user))
+
+    def delete(self):
+        path = os.path.join(self.data_dir, self.store.name)
+        if os.path.isdir(path):
+            shutil.rmtree(path)
+        logger.debug('Deleted')
