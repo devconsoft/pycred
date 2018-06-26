@@ -1,9 +1,13 @@
+import logging
 import os
 from functools import lru_cache
 
 from ruamel.yaml import YAML
 
 from .paths import get_config_filepath
+
+logger = logging.getLogger('config')
+logger.addHandler(logging.NullHandler())
 
 
 class BackendConfig(object):
@@ -109,7 +113,7 @@ DEFAULT_PYCRED_CONFIG = PyCredConfig(
     PyCredBackendDefaultConfig(
         'file', [
             BackendConfig('file', {
-                'data_dir': '~/.pycred/data/storage/file'
+                'data_dir': '~/.pycred/data/%store%/storage/file'
             }),
             BackendConfig('memory', {})
         ]))
@@ -176,6 +180,8 @@ class ConfigurationManager(object):
         """
         parser = self.get_store_config_file_parser()
         path = self.get_store_config_filename(config.name)
+        logger.debug(
+            "Saving store config for {name} (path={path})".format(name=config.name, path=path))
         with open(path, 'w') as f:
             parser.dump(config, f)
 
@@ -190,11 +196,34 @@ class ConfigurationManager(object):
         :returns: StoreConfig
         """
         pycred_config = self.get_pycred_config()
-        serializer_config = pycred_config.serializers.get_backend(serializer)
-        encryption_config = pycred_config.encryptions.get_backend(encryption)
-        storage_config = pycred_config.storages.get_backend(storage)
+        macro_tokens = {'%store%': name}
+        serializer_config = self.macro_expand(
+            pycred_config.serializers.get_backend(serializer), macro_tokens)
+        encryption_config = self.macro_expand(
+            pycred_config.encryptions.get_backend(encryption), macro_tokens)
+        storage_config = self.macro_expand(
+            pycred_config.storages.get_backend(storage), macro_tokens)
         return StoreConfig(name, serializer_config, encryption_config, storage_config)
 
     def get_store_config_filename(self, store_name):
         store_config_dir = self.get_pycred_config().get_store_path()
         return os.path.join(store_config_dir, "{name}.yaml".format(name=store_name))
+
+    def macro_expand(self, data, tokens):
+        try:
+            if isinstance(data, str):
+                for token, token_value in tokens.items():
+                    data = data.replace(token, token_value)
+            if isinstance(data, dict):
+                for key, val in data.items():
+                    data[key] = self.macro_expand(val, tokens)
+            if isinstance(data, list):
+                for index, value in enumerate(data):
+                    data[index] = self.macro_expand(value, tokens)
+            if isinstance(data, object):
+                for attr in vars(data):
+                    setattr(data, attr, self.macro_expand(getattr(data, attr), tokens))
+
+        except Exception as e:
+            pass
+        return data

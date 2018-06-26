@@ -23,7 +23,7 @@ class TestFileStorage(unittest.TestCase):
             self.assertEqual(self.data, result)
 
     def test_set_data(self):
-        with patch('builtins.open', new_callable=mock_open) as m:
+        with patch('builtins.open', new_callable=mock_open) as m, patch('os.makedirs'):
             s = self.get_filestorage()
             s.set_data('user', self.data)
             m.assert_called_with('data_dir/store/user.dat', 'w')

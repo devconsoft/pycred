@@ -16,7 +16,7 @@ storages: !PyCredBackendDefaultConfig
   backends:
   - !BackendConfig
     data:
-      data_dir: '~/.pycred/data/storage/file'
+      data_dir: '~/.pycred/data/%store%/storage/file'
     name: 'file'
   - !BackendConfig
     data: {}

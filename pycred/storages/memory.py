@@ -15,13 +15,13 @@ class MemoryStorage(AbstractStorage):
         try:
             return self.data[user]
         except Exception:
-            raise GetDataFailed('MemoryStorage')
+            raise GetDataFailed('MemoryStorage') from None
 
     def set_data(self, user, data):
         try:
             self.data[user] = data
         except Exception:
-            raise SetDataFailed('FileStorage')
+            raise SetDataFailed('FileStorage') from None
 
     def delete(self):
         logger.debug("Deleted")

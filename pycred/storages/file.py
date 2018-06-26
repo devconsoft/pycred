@@ -20,18 +20,20 @@ class FileStorage(AbstractStorage):
             with open(path, 'r') as f:
                 return f.read()
         except Exception:
-            raise GetDataFailed('FileStorage')
+            raise GetDataFailed('FileStorage') from None
 
     def set_data(self, user, data):
         try:
             path = self.get_path(user)
+            os.makedirs(os.path.dirname(path), exist_ok=True)
             with open(path, 'w') as f:
                 f.write(data)
         except Exception:
-            raise SetDataFailed('FileStorage')
+            raise SetDataFailed('FileStorage') from None
 
     def get_path(self, user):
-        return os.path.join(self.data_dir, self.store.name ,"{name}.dat".format(name=user))
+        return os.path.expanduser(
+            os.path.join(self.data_dir, self.store.name, "{name}.dat".format(name=user)))
 
     def delete(self):
         path = os.path.join(self.data_dir, self.store.name)

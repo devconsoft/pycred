@@ -10,6 +10,7 @@ from .help import help
 from .init import init
 from .list import liststores
 from .rm import rm
+from .set import set_credentials
 
 
 @click.group(context_settings=DEFAULT_CONTEXT_SETTINGS)
@@ -33,6 +34,7 @@ main.add_command(help)
 main.add_command(init)
 main.add_command(liststores)
 main.add_command(rm)
+main.add_command(set_credentials)
 
 if __name__ == '__main__':
     main()

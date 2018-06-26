@@ -1,8 +1,10 @@
+import getpass
 import glob
 import logging
 import os
 
 from .config import ConfigurationManager
+from .credentials import Credentials
 from .factory import Factory
 
 logger = logging.getLogger('pycred')
@@ -72,3 +74,12 @@ class PyCred(object):
         files = glob.glob(os.path.join(store_path, '*.yaml'))
         result = [os.path.basename(f).rsplit('.', 1)[0] for f in files]
         return sorted(result)
+
+    def get_default_user(self):
+        return getpass.getuser()
+
+    def set_credentials(self, store, username, password, user=None):
+        if user is None:
+            user = self.get_default_user()
+        store = self.get_store(store)
+        store.set_credentials(user, Credentials(username, password))

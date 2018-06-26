@@ -3,8 +3,8 @@ from io import StringIO
 from textwrap import dedent
 from unittest.mock import MagicMock, mock_open, patch
 
-from ..config import BackendConfig, ConfigurationManager, PyCredBackendDefaultConfig, \
-    PyCredConfig, StoreConfig
+from ..config import BackendConfig, ConfigurationManager, DEFAULT_PYCRED_CONFIG, \
+    PyCredBackendDefaultConfig, PyCredConfig, StoreConfig
 
 
 class TestPyCredBackendDefaultConfig(unittest.TestCase):
@@ -194,3 +194,9 @@ class TestConfigurationManager(unittest.TestCase):
         self.assertEqual('SE', store_config.serializer.name)
         self.assertEqual('EN', store_config.encryption.name)
         self.assertEqual('ST', store_config.storage.name)
+
+    def test_macro_expand_file_config(self):
+        cfg = DEFAULT_PYCRED_CONFIG.storages.get_backend('file')
+        tokens = {'%store%': 'STORE'}
+        cfg = ConfigurationManager().macro_expand(cfg, tokens)
+        self.assertEqual(cfg.data['data_dir'], '~/.pycred/data/STORE/storage/file')

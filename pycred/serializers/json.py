@@ -16,14 +16,14 @@ class JsonSerializer(AbstractSerializer):
             data = [credentials.username, credentials.password]
             return json.dumps(data)
         except Exception:
-            raise SerializationFailed('JsonSerializer')
+            raise SerializationFailed('JsonSerializer') from None
 
     def deserialize(self, data):
         try:
             deserialized = json.loads(data)
             return Credentials(deserialized[0], deserialized[1])
         except Exception:
-            raise DeserializationFailed('JsonSerializer')
+            raise DeserializationFailed('JsonSerializer') from None
 
     def delete(self):
         logger.debug("Deleted")

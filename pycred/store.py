@@ -3,6 +3,7 @@ import logging
 logger = logging.getLogger('store')
 logger.addHandler(logging.NullHandler())
 
+
 class Store(object):
 
     def __init__(self, name, serializer, encryption, storage):
