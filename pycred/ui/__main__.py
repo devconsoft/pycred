@@ -6,6 +6,7 @@ import coloredlogs
 import pycred
 
 from . import DEFAULT_CONTEXT_SETTINGS
+from .get import get_credentials
 from .help import help
 from .init import init
 from .list import liststores
@@ -35,6 +36,7 @@ main.add_command(init)
 main.add_command(liststores)
 main.add_command(rm)
 main.add_command(set_credentials)
+main.add_command(get_credentials)
 
 if __name__ == '__main__':
     main()

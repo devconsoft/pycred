@@ -2,6 +2,7 @@ from unittest.mock import patch
 import os
 import tempfile
 
+from systest import get_stores_dir
 
 def test_list_long_opt_help(pycred):
     pycred('list --help')
@@ -12,13 +13,8 @@ def test_list_short_opt_help(pycred):
 
 
 def test_list(pycred):
-    with tempfile.TemporaryDirectory(prefix='pycred-') as d:
-        with open(os.path.join(d, "s1.yaml"), 'w+'):
-            pass
-        with open(os.path.join(d, "s2.yaml"), 'w+'):
-            pass
-        with patch.dict('os.environ', {'PYCRED_STORE_PATH': d}):
-            result = pycred('list')
+    with patch.dict('os.environ', {'PYCRED_STORE_PATH': get_stores_dir()}):
+        result = pycred('list')
     expected = """\
 s1
 s2

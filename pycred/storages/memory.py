@@ -1,6 +1,6 @@
 import logging
 
-from . import AbstractStorage, GetDataFailed, SetDataFailed
+from . import AbstractStorage, GetDataFailed, InvalidUser, SetDataFailed
 
 logger = logging.getLogger('MemoryStorage')
 logger.addHandler(logging.NullHandler())
@@ -14,6 +14,8 @@ class MemoryStorage(AbstractStorage):
     def get_data(self, user):
         try:
             return self.data[user]
+        except KeyError:
+            raise InvalidUser('MemoryStorage') from None
         except Exception:
             raise GetDataFailed('MemoryStorage') from None
 

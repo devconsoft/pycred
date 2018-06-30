@@ -83,3 +83,9 @@ class PyCred(object):
             user = self.get_default_user()
         store = self.get_store(store)
         store.set_credentials(user, Credentials(username, password))
+
+    def get_credentials(self, store, user=None):
+        if user is None:
+            user = self.get_default_user()
+        store = self.get_store(store)
+        return store.get_credentials(user)

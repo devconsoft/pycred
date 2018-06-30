@@ -3,7 +3,7 @@ from io import StringIO
 from textwrap import dedent
 from unittest.mock import MagicMock, mock_open, patch
 
-from ..config import BackendConfig, ConfigurationManager, DEFAULT_PYCRED_CONFIG, \
+from ..config import DEFAULT_PYCRED_CONFIG, BackendConfig, ConfigurationManager, \
     PyCredBackendDefaultConfig, PyCredConfig, StoreConfig
 
 
