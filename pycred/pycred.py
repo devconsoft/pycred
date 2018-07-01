@@ -11,6 +11,12 @@ logger = logging.getLogger('pycred')
 logger.addHandler(logging.NullHandler())
 
 
+class StoreAlreadyExists(Exception):
+
+    def __init__(self, name):
+        super().__init__('Store {name} already exists.'.format(name=name))
+
+
 class PyCred(object):
 
     def __init__(self):
@@ -33,12 +39,17 @@ class PyCred(object):
 
         The function returns the new store instance.
 
+        If a store with the same name already exists, an StoreAlreadyExists exception
+        is thrown.
+
         :param name: Name of the store.
         :param serializer: Name of the serializer type.
         :param encryption: Name of the encryption type.
         :param storage: Name of the storage type.
         :returns: Store
         """
+        if name in self.get_store_names():
+            raise StoreAlreadyExists(name)
         store_config = self.config.create_store_config(name, serializer, encryption, storage)
         self.config.save_store_config(store_config)
         store = self.factory.get_store(store_config)

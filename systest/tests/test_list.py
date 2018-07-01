@@ -1,8 +1,7 @@
 from unittest.mock import patch
-import os
-import tempfile
 
 from systest import get_stores_dir
+
 
 def test_list_long_opt_help(pycred):
     pycred('list --help')

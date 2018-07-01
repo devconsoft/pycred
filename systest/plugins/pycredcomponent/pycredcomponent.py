@@ -2,11 +2,11 @@ import logging
 import subprocess
 
 from k2.cmd.run import RUN_COMMAND
-from k2.config.options import ConfigOption
 from k2.component.decorator import component
-from k2.extensions.extension import CommandExtension, AbstractExtension, get_logger_name
+from k2.config.options import ConfigOption
+from k2.extensions.extension import AbstractExtension, CommandExtension, get_logger_name
 
-from . import COVERAGE_ENABLED, COVERAGE_CONFIG_FILE
+from . import COVERAGE_CONFIG_FILE, COVERAGE_ENABLED
 
 logger = logging.getLogger(get_logger_name('pycredcomponent'))
 logger.addHandler(logging.NullHandler())
@@ -44,13 +44,12 @@ class PyCredExtension(AbstractExtension):
                 pycred_entry_point = subprocess.check_output(
                     ['which', 'pycred'], universal_newlines=True).strip()
 
-                pycred_command = (
-                    "{prefix} "
-                    "{entry_point} "
-                    "{command}").format(
-                        prefix=prefix,
-                        entry_point=pycred_entry_point,
-                        command=command)
+                pycred_command = ("{prefix} "
+                                  "{entry_point} "
+                                  "{command}").format(
+                                      prefix=prefix,
+                                      entry_point=pycred_entry_point,
+                                      command=command)
 
                 logger.info('Running pycred command: {command}'.format(command=pycred_command))
                 self.result = subprocess.Popen(

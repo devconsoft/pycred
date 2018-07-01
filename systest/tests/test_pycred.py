@@ -1,4 +1,3 @@
-
 def test_version(pycred):
     pycred('--version')
 

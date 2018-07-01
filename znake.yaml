@@ -36,6 +36,7 @@ znake:
   static:
     packages:
       - pycred
+      - systest
   deb:
     package: pycred
     dependencies:

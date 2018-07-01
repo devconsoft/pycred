@@ -5,7 +5,7 @@ import sys
 import click
 
 from . import DEFAULT_CONTEXT_SETTINGS
-from ..pycred import PyCred
+from ..pycred import PyCred, StoreAlreadyExists
 
 logger = logging.getLogger('init')
 logger.addHandler(logging.NullHandler())
@@ -47,6 +47,9 @@ def init(ctx, serializer, encryption, storage, name):
         logger.debug("store_path={sp}".format(sp=_config.get_store_path()))
         os.makedirs(_config.get_store_path(), mode=0o700, exist_ok=True)
         _pycred.init_store(name, serializer, encryption, storage)
+    except StoreAlreadyExists as e:
+        print(str(e), file=sys.stderr)
+        sys.exit(2)
     except Exception as e:
         logger.debug(e, exc_info=True)
         print('Error: {msg}'.format(msg=str(e)), file=sys.stderr)

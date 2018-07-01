@@ -1,16 +1,14 @@
-from unittest.mock import patch
-import os
 import tempfile
+from unittest.mock import patch
 
-from systest import get_stores_dir
 
 def test_scenario_init_list_set_get_rm_for_json_clear_file_store(pycred):
-     with tempfile.TemporaryDirectory(prefix='pycred-') as d:
-         with patch.dict('os.environ', {'PYCRED_STORE_PATH': d}):
-             pycred('init mystore')
-             assert pycred('list').stdout == 'mystore\n'
-             pycred('set mystore -u USER --password P U')
-             assert pycred('get mystore -u USER --password').stdout == 'P\n'
-             assert pycred('get mystore -u USER --username').stdout == 'U\n'
-             assert pycred('get mystore -u USER --password --username').stdout == 'U\nP\n'
-             assert 'Deleting store mystore' in pycred('-v rm mystore').stderr
+    with tempfile.TemporaryDirectory(prefix='pycred-') as d:
+        with patch.dict('os.environ', {'PYCRED_STORE_PATH': d}):
+            pycred('init mystore')
+            assert pycred('list').stdout == 'mystore\n'
+            pycred('set mystore -u USER --password P U')
+            assert pycred('get mystore -u USER --password').stdout == 'P\n'
+            assert pycred('get mystore -u USER --username').stdout == 'U\n'
+            assert pycred('get mystore -u USER --password --username').stdout == 'U\nP\n'
+            assert 'Deleting store mystore' in pycred('-v rm mystore').stderr
