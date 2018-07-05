@@ -6,7 +6,8 @@ from unittest.mock import patch
 from ..config import DEFAULT_PYCRED_CONFIG, BackendConfig, StoreConfig
 from ..credentials import Credentials
 from ..encryptions.clear import ClearEncryption
-from ..pycred import PyCred, StoreAlreadyExists
+from ..exceptions import StoreAlreadyExists, StoreDoesNotExist
+from ..pycred import PyCred
 from ..serializers.json import JsonSerializer
 from ..storages.file import FileStorage
 
@@ -50,7 +51,19 @@ class TestPyCred(unittest.TestCase):
 
         self.assertEqual(['s1', 's2'], names)
 
-    def test_init_already_existing_store_throws_exception(self):
+    def test_init_already_existing_store_raises_exception(self):
         with patch('pycred.pycred.PyCred.get_store_names', return_value='store'):
             with self.assertRaises(StoreAlreadyExists):
                 PyCred().init_store('store', None, None, None)
+
+    def test_get_store_that_does_not_exists_raises_exception(self):
+        with tempfile.TemporaryDirectory(prefix='pycred-') as d:
+            with patch.dict('os.environ', {'PYCRED_STORE_PATH': d}):
+                with self.assertRaises(StoreDoesNotExist):
+                    PyCred().get_store('non-existing-store')
+
+    def test_delete_store_that_does_not_exists_raises_exception(self):
+        with tempfile.TemporaryDirectory(prefix='pycred-') as d:
+            with patch.dict('os.environ', {'PYCRED_STORE_PATH': d}):
+                with self.assertRaises(StoreDoesNotExist):
+                    PyCred().delete_store('non-existing-store')

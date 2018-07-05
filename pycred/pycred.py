@@ -5,16 +5,11 @@ import os
 
 from .config import ConfigurationManager
 from .credentials import Credentials
+from .exceptions import StoreAlreadyExists
 from .factory import Factory
 
 logger = logging.getLogger('pycred')
 logger.addHandler(logging.NullHandler())
-
-
-class StoreAlreadyExists(Exception):
-
-    def __init__(self, name):
-        super().__init__('Store {name} already exists.'.format(name=name))
 
 
 class PyCred(object):
@@ -96,6 +91,16 @@ class PyCred(object):
         store.set_credentials(user, Credentials(username, password))
 
     def get_credentials(self, store, user=None):
+        """
+        Get credential from store for the specified user.
+
+        If the user doesn't exist in the store, None is returned.
+
+        :param store: Name of store
+        :param user: User
+        :returns: Credentials or None if the user doesn't exist in the store.
+        """
+
         if user is None:
             user = self.get_default_user()
         store = self.get_store(store)

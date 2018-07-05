@@ -4,6 +4,7 @@ from functools import lru_cache
 
 from ruamel.yaml import YAML
 
+from .exceptions import StoreDoesNotExist
 from .paths import get_config_filepath
 
 logger = logging.getLogger('config')
@@ -159,23 +160,29 @@ class ConfigurationManager(object):
         with open(path, 'w') as f:
             parser.dump(config, f)
 
-    def get_store_config(self, store_name):
+    def get_store_config(self, name):
         """
         Get Store configuration.
 
-        :param store_config_dir: Path to store configurations directory.
+        Raises StoreDoesNotExist exception if the store with the specified name
+        doesn't exist.
+
+        :param name: Name of the store.
         :returns: StoreConfig
         """
         parser = self.get_store_config_file_parser()
-        path = self.get_store_config_filename(store_name)
-        with open(path, 'r') as f:
-            return parser.load(f)
+        path = self.get_store_config_filename(name)
+        logger.debug("Get store config for {name} (path={path})".format(name=name, path=path))
+        try:
+            with open(path, 'r') as f:
+                return parser.load(f)
+        except FileNotFoundError as e:
+            raise StoreDoesNotExist(name) from None
 
     def save_store_config(self, config):
         """
         Save store configuration to file.
 
-        :param store_config_dir: Path to store configurations directory.
         :param config: StoreConfig
         """
         parser = self.get_store_config_file_parser()
