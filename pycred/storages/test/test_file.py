@@ -27,6 +27,12 @@ class TestFileStorage(unittest.TestCase):
             m.assert_called_with('data_dir/user.dat', 'w')
             m().write.assert_called_with(self.data)
 
+    def test_unset_data(self):
+        with patch('os.unlink') as m:
+            s = self.get_filestorage()
+            s.unset_data('user')
+            m.assert_called_with('data_dir/user.dat')
+
     def test_raises_invaliduser_if_the_user_is_not_found(self):
         s = FileStorage('/invalid/random/path')
         with self.assertRaises(InvalidUser):

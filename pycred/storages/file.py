@@ -32,6 +32,13 @@ class FileStorage(AbstractStorage):
         except Exception:
             raise SetDataFailed('FileStorage') from None
 
+    def unset_data(self, user):
+        try:
+            path = self.get_path(user)
+            os.unlink(path)
+        except Exception:
+            raise UnsetDataFailed('FileStorage') from None
+
     def get_path(self, user):
         return os.path.expanduser(os.path.join(self.data_dir, "{name}.dat".format(name=user)))
 

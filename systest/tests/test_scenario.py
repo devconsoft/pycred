@@ -2,7 +2,7 @@ import tempfile
 from unittest.mock import patch
 
 
-def test_scenario_init_list_set_get_rm_for_json_clear_file_store(pycred):
+def test_scenario_init_list_set_get_unset_rm_for_json_clear_file_store(pycred):
     with tempfile.TemporaryDirectory(prefix='pycred-') as d:
         with patch.dict('os.environ', {'PYCRED_STORE_PATH': d}):
             pycred('init mystore')
@@ -11,4 +11,6 @@ def test_scenario_init_list_set_get_rm_for_json_clear_file_store(pycred):
             assert pycred('get mystore -u USER --password').stdout == 'P\n'
             assert pycred('get mystore -u USER --username').stdout == 'U\n'
             assert pycred('get mystore -u USER --password --username').stdout == 'U\nP\n'
-            assert 'Deleting store mystore' in pycred('-v rm mystore').stderr
+            assert "Unsetting credentials for user 'USER' in store 'mystore'" in pycred(
+                '-v unset mystore -u USER').stderr
+            assert "Deleting store 'mystore'" in pycred('-v rm mystore').stderr

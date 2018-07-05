@@ -12,6 +12,7 @@ from .init import init
 from .list import liststores
 from .rm import rm
 from .set import set_credentials
+from .unset import unset_credentials
 
 
 @click.group(context_settings=DEFAULT_CONTEXT_SETTINGS)
@@ -31,12 +32,13 @@ def main(ctx, verbose):
     coloredlogs.install(level=level, fmt=fmt)
 
 
+main.add_command(get_credentials)
 main.add_command(help)
 main.add_command(init)
 main.add_command(liststores)
 main.add_command(rm)
 main.add_command(set_credentials)
-main.add_command(get_credentials)
+main.add_command(unset_credentials)
 
 if __name__ == '__main__':
     main()

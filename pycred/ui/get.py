@@ -25,7 +25,7 @@ def get_credentials(ctx, user, store, username, password):
     """
     Get credentials (username and password printed to stdout) for the USER in STORE.
 
-    Alternative user can be specified with --u/-u. Defaults to the current user.
+    Alternative user can be specified with --user/-u. Defaults to the current user.
 
     --username and --password can be used to set what should be shown.
     If neither is specified, the command only returns without printing anything, but

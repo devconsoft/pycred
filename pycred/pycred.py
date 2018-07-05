@@ -56,7 +56,7 @@ class PyCred(object):
 
         :param name: Name of the store to delete.
         """
-        logger.info("Deleting store {name}".format(name=name))
+        logger.info("Deleting store '{name}'".format(name=name))
         logger.debug("delete_store (store_path={sp})".format(sp=self.get_config().get_store_path()))
         store_configfile = self.config.get_store_config_filename(name)
         store_config = self.config.get_store_config(name)
@@ -89,6 +89,21 @@ class PyCred(object):
             user = self.get_default_user()
         store = self.get_store(store)
         store.set_credentials(user, Credentials(username, password))
+
+    def unset_credentials(self, store, user=None):
+        """
+        Unset credentials for user in storeself.
+
+        If the store doesn't exist an StoreDoesNotExist exception is raised.
+        If the user doesn't exist in the store, an UserDoesNotExist exception is raised.
+        """
+        if user is None:
+            user = self.get_default_user()
+        store = self.get_store(store)
+        logger.info(
+            "Unsetting credentials for user '{user}' in store '{store}'".format(
+                user=user, store=store.name))
+        store.unset_credentials(user)
 
     def get_credentials(self, store, user=None):
         """

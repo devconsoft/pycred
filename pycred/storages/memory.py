@@ -1,6 +1,6 @@
 import logging
 
-from . import AbstractStorage, GetDataFailed, InvalidUser, SetDataFailed
+from . import AbstractStorage, GetDataFailed, InvalidUser, SetDataFailed, UnsetDataFailed
 
 logger = logging.getLogger('MemoryStorage')
 logger.addHandler(logging.NullHandler())
@@ -23,7 +23,13 @@ class MemoryStorage(AbstractStorage):
         try:
             self.data[user] = data
         except Exception:
-            raise SetDataFailed('FileStorage') from None
+            raise SetDataFailed('MemoryStorage') from None
+
+    def unset_data(self, user):
+        try:
+            self.data.pop(user)
+        except Exception:
+            raise UnsetDataFailed('MemoryStorage') from None
 
     def delete(self):
         logger.debug("Deleted")

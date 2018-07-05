@@ -32,6 +32,9 @@ class Store(object):
         encrypted_data = self.encryption.encrypt(data)
         self.storage.set_data(user, encrypted_data)
 
+    def unset_credentials(self, user):
+        self.storage.unset_data(user)
+
     def delete(self):
         logger.debug("Deleting {name}".format(name=self.name))
         self.serializer.delete()

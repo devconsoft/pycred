@@ -11,6 +11,11 @@ class SetDataFailed(Exception):
     pass
 
 
+class UnsetDataFailed(Exception):
+    """Thrown if data for the specified user could not be unset (deleted)."""
+    pass
+
+
 class InvalidUser(Exception):
     """Thrown if the specified user is invalid."""
     pass
@@ -41,6 +46,20 @@ class AbstractStorage(metaclass=ABCMeta):
         If the specified user is invalid, the method should throw InvalidUser exception.
 
         If setting data fails, the method should throw SetDataFailed exception.
+
+        The exception is not allowed to contain any data except the name of
+        the storage class.
+        """
+        pass
+
+    @abstractmethod
+    def unset_data(self, user):
+        """
+        Unset (delete) data for user in storage.
+
+        If the specified user is invalid, the method should throw InvalidUser exception.
+
+        If unsetting data fails, the method should throw UnsetDataFailed exception.
 
         The exception is not allowed to contain any data except the name of
         the storage class.

@@ -20,6 +20,13 @@ class TestMemoryStorage(unittest.TestCase):
         s.set_data(self.user, self.data)
         self.assertEqual(self.data, s.data[self.user])
 
+    def test_unset_data(self):
+        s = MemoryStorage()
+        s.data[self.user] = self.data
+        s.unset_data(self.user)
+        with self.assertRaises(InvalidUser):
+            s.get_data('user')
+
     def test_raises_invaliduser_if_the_user_does_not_exists(self):
         s = MemoryStorage()
         with self.assertRaises(InvalidUser):
