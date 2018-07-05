@@ -36,7 +36,7 @@ class FileStorage(AbstractStorage):
         return os.path.expanduser(os.path.join(self.data_dir, "{name}.dat".format(name=user)))
 
     def delete(self):
-        path = self.data_dir
+        path = os.path.expanduser(self.data_dir)
         if os.path.isdir(path):
             shutil.rmtree(path)
         logger.debug('Deleted')
