@@ -20,6 +20,6 @@ def test_get_none_existing_user_gives_exit_code_3(pycred):
             pycred('init mystore')
             try:
                 result = pycred('get mystore -u USER', expected_exit_code=3)
-                assert "User 'USER' does not exist in store 'mystore'." in result.stderr
+                assert "Error: User 'USER' does not exist in store 'mystore'." in result.stderr
             finally:
                 pycred('rm mystore')

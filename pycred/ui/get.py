@@ -40,7 +40,8 @@ def get_credentials(ctx, user, store, username, password):
         credentials = _pycred.get_credentials(store, user)
         if credentials is None:
             print(
-                "User '{user}' does not exist in store '{store}'.".format(user=user, store=store),
+                "Error: User '{user}' does not exist in store '{store}'.".format(
+                    user=user, store=store),
                 file=sys.stderr)
             sys.exit(3)
         if username:
