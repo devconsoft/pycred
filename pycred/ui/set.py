@@ -10,12 +10,13 @@ logger = logging.getLogger('set')
 logger.addHandler(logging.NullHandler())
 
 _pycred = PyCred()
+_stores = _pycred.get_store_names()
 
 
 @click.command('set', context_settings=DEFAULT_CONTEXT_SETTINGS)
 @click.option('--user', '-u', help='User', default=_pycred.get_default_user(), show_default=True)
 @click.password_option()
-@click.argument('store', nargs=1, required=True)
+@click.argument('store', nargs=1, required=True, type=click.Choice(_stores))
 @click.argument('username', nargs=1, required=True)
 @click.pass_context
 def set_credentials(ctx, user, store, username, password):

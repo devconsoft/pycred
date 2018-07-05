@@ -10,11 +10,12 @@ logger = logging.getLogger('get')
 logger.addHandler(logging.NullHandler())
 
 _pycred = PyCred()
+_stores = _pycred.get_store_names()
 
 
 @click.command('get', context_settings=DEFAULT_CONTEXT_SETTINGS)
 @click.option('--user', '-u', help='User', default=_pycred.get_default_user(), show_default=True)
-@click.argument('store', nargs=1, required=True)
+@click.argument('store', nargs=1, required=True, type=click.Choice(_stores))
 @click.option(
     '--username', '-n', help='Show username', default=False, show_default=True, is_flag=True)
 @click.option(
@@ -30,7 +31,7 @@ def get_credentials(ctx, user, store, username, password):
     If neither is specified, the command only returns without printing anything, but
     with exit code zero to indicate that credentials exist for the specified user.
 
-    If the user doesn't exist, the program exits with exit code 2.
+    If the user doesn't exist, the program exits with exit code 3.
     """
     try:
         logger.debug(
@@ -38,7 +39,10 @@ def get_credentials(ctx, user, store, username, password):
                 store=store, user=user, username=username))
         credentials = _pycred.get_credentials(store, user)
         if credentials is None:
-            sys.exit(2)
+            print(
+                "User '{user}' does not exist in store '{store}'.".format(user=user, store=store),
+                file=sys.stderr)
+            sys.exit(3)
         if username:
             print(credentials.username)
         if password:
