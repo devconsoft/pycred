@@ -33,3 +33,6 @@ class MemoryStorage(AbstractStorage):
 
     def delete(self):
         logger.debug("Deleted")
+
+    def get_users(self):
+        return sorted(self.data.keys())

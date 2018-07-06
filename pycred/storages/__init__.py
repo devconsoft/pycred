@@ -21,6 +21,11 @@ class InvalidUser(Exception):
     pass
 
 
+class GetUsersFailed(Exception):
+    """Thrown if the list of users could not be retrieved for the storage."""
+    pass
+
+
 class AbstractStorage(metaclass=ABCMeta):
 
     @abstractmethod
@@ -69,4 +74,9 @@ class AbstractStorage(metaclass=ABCMeta):
     @abstractmethod
     def delete(self):
         """Delete any permanent resources associated with the instance."""
+        pass
+
+    @abstractmethod
+    def get_users(self):
+        """Get list of users that has stored credentials in the storage."""
         pass

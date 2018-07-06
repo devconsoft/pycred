@@ -31,3 +31,10 @@ class TestMemoryStorage(unittest.TestCase):
         s = MemoryStorage()
         with self.assertRaises(InvalidUser):
             s.get_data('user')
+
+    def test_get_users_returns_sorted_list(self):
+        s = MemoryStorage()
+        s.set_data('user2', self.data)
+        s.set_data('user1', self.data)
+        users = s.get_users()
+        self.assertEqual(['user1', 'user2'], users)

@@ -67,3 +67,12 @@ class TestStore(unittest.TestCase):
         storage.delete.assert_called_once_with()
         encryption.delete.assert_called_once_with()
         serializer.delete.assert_called_once_with()
+
+    def test_get_users(self):
+        serializer = MagicMock()
+        encryption = MagicMock()
+        storage = MagicMock()
+        storage.get_users = MagicMock(return_value=['user'])
+
+        store = Store('name', serializer, encryption, storage)
+        self.assertEqual(['user'], store.get_users())

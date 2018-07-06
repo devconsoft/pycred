@@ -212,9 +212,29 @@ class ConfigurationManager(object):
             pycred_config.storages.get_backend(storage), macro_tokens)
         return StoreConfig(name, serializer_config, encryption_config, storage_config)
 
-    def get_store_config_filename(self, store_name):
+    def get_raw_config(self, name):
+        """
+        Get raw config, store config file content.
+
+        :param name: Name of the store.
+        :returns: config file content
+        """
+        path = self.get_store_config_filename(name)
+        try:
+            with open(path, 'r') as f:
+                return f.read()
+        except FileNotFoundError as e:
+            raise StoreDoesNotExist(name) from None
+
+    def get_store_config_filename(self, name):
+        """
+        Get filename (path) for store config file.
+
+        :param name: Name of the store.
+        :returns: filename
+        """
         store_config_dir = self.get_pycred_config().get_store_path()
-        return os.path.join(store_config_dir, "{name}.yaml".format(name=store_name))
+        return os.path.join(store_config_dir, "{name}.yaml".format(name=name))
 
     def macro_expand(self, data, tokens):
         try:

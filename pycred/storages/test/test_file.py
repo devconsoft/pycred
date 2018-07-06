@@ -60,3 +60,9 @@ class TestFileStorage(unittest.TestCase):
         with patch('os.unlink', side_effect=PermissionError()):
             with self.assertRaises(UnsetDataFailed):
                 s.unset_data('user')
+
+    def test_get_users(self):
+        s = self.get_filestorage()
+        with patch('glob.glob', return_value=['data_dir/user2.dat', 'data_dir/user1.dat']):
+            users = s.get_users()
+        self.assertEqual(['user1', 'user2'], users)

@@ -35,6 +35,9 @@ class Store(object):
     def unset_credentials(self, user):
         self.storage.unset_data(user)
 
+    def get_users(self):
+        return self.storage.get_users()
+
     def delete(self):
         logger.debug("Deleting {name}".format(name=self.name))
         self.serializer.delete()

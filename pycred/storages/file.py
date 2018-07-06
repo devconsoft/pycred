@@ -1,3 +1,4 @@
+import glob
 import logging
 import os
 import shutil
@@ -11,7 +12,7 @@ logger.addHandler(logging.NullHandler())
 class FileStorage(AbstractStorage):
 
     def __init__(self, data_dir):
-        self.data_dir = data_dir
+        self.data_dir = os.path.expanduser(data_dir)
 
     def get_data(self, user):
         try:
@@ -40,10 +41,15 @@ class FileStorage(AbstractStorage):
             raise UnsetDataFailed('FileStorage') from None
 
     def get_path(self, user):
-        return os.path.expanduser(os.path.join(self.data_dir, "{name}.dat".format(name=user)))
+        return os.path.join(self.data_dir, "{name}.dat".format(name=user))
 
     def delete(self):
-        path = os.path.expanduser(self.data_dir)
+        path = self.data_dir
         if os.path.isdir(path):
             shutil.rmtree(path)
         logger.debug('Deleted')
+
+    def get_users(self):
+        files = glob.glob(os.path.join(self.data_dir, '*.dat'))
+        result = [os.path.basename(f).rsplit('.', 1)[0] for f in files]
+        return sorted(result)

@@ -8,6 +8,7 @@ import pycred
 from . import DEFAULT_CONTEXT_SETTINGS
 from .get import get_credentials
 from .help import help
+from .info import info
 from .init import init
 from .list import liststores
 from .rm import rm
@@ -34,6 +35,7 @@ def main(ctx, verbose):
 
 main.add_command(get_credentials)
 main.add_command(help)
+main.add_command(info)
 main.add_command(init)
 main.add_command(liststores)
 main.add_command(rm)

@@ -38,6 +38,7 @@ class TestPyCred(unittest.TestCase):
         self.assertIsInstance(store.encryption, ClearEncryption)
         self.assertIsInstance(store.storage, FileStorage)
         default_path = DEFAULT_PYCRED_CONFIG.storages.get_backend('file').data['data_dir']
+        default_path = os.path.expanduser(default_path)
         self.assertEqual(default_path, store.storage.data_dir)
 
     def test_get_store_names(self):
