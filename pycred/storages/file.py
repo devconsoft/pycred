@@ -2,7 +2,7 @@ import logging
 import os
 import shutil
 
-from . import AbstractStorage, GetDataFailed, InvalidUser, SetDataFailed
+from . import AbstractStorage, GetDataFailed, InvalidUser, SetDataFailed, UnsetDataFailed
 
 logger = logging.getLogger('FileStorage')
 logger.addHandler(logging.NullHandler())

@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import mock_open, patch
 
-from .. import GetDataFailed, InvalidUser, SetDataFailed
+from .. import GetDataFailed, InvalidUser, SetDataFailed, UnsetDataFailed
 from ..file import FileStorage
 
 
@@ -33,24 +33,30 @@ class TestFileStorage(unittest.TestCase):
             s.unset_data('user')
             m.assert_called_with('data_dir/user.dat')
 
-    def test_raises_invaliduser_if_the_user_is_not_found(self):
-        s = FileStorage('/invalid/random/path')
-        with self.assertRaises(InvalidUser):
-            s.get_data('user')
-
-    def test_raises_get_data_failed_for_permission_errors(self):
-        with patch('builtins.open', side_effect=PermissionError()):
-            s = FileStorage('data_dir')
-            with self.assertRaises(GetDataFailed):
-                s.get_data('user')
-
-    def test_raises_set_data_failed(self):
-        s = FileStorage('/invalid/random/path')
-        with self.assertRaises(SetDataFailed):
-            s.set_data('user', self.data)
-
     def test_delete(self):
         s = self.get_filestorage()
         with patch('shutil.rmtree') as m, patch('os.path.isdir', return_value=True):
             s.delete()
         m.assert_called_with('data_dir')
+
+    def test_get_data_raises_invaliduser_if_the_user_is_not_found(self):
+        s = FileStorage('/invalid/random/path')
+        with self.assertRaises(InvalidUser):
+            s.get_data('user')
+
+    def test_get_data_raises_get_data_failed_for_permission_errors(self):
+        with patch('builtins.open', side_effect=PermissionError()):
+            s = FileStorage('data_dir')
+            with self.assertRaises(GetDataFailed):
+                s.get_data('user')
+
+    def test_set_data_raises_set_data_failed(self):
+        s = FileStorage('/invalid/random/path')
+        with self.assertRaises(SetDataFailed):
+            s.set_data('user', self.data)
+
+    def test_unset_data_raises_unset_data_failed(self):
+        s = FileStorage('data_dir')
+        with patch('os.unlink', side_effect=PermissionError()):
+            with self.assertRaises(UnsetDataFailed):
+                s.unset_data('user')
