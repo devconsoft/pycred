@@ -6,6 +6,7 @@ The following commands are available:
 * :ref:`Help`
 * :ref:`Init`
 * :ref:`Set`
+* :ref:`Get`
 * :ref:`Unset`
 * :ref:`Rm`
 * :ref:`List`
@@ -70,6 +71,24 @@ An alternative user than the current user can be specified using the ``--user/-u
     pycred set STORE_NAME USERNAME
     pycred set --user ALT_USER STORE_NAME USERNAME
 
+
+Get
+---
+The get command is used to print the credentials for a user in a store.
+By default the current system user is used.
+
+An alternative user than the current user can be specified using the ``--user/-u`` option.
+
+To specify what part of the credentials to print, use the ``--username/-n`` and ``--password/-p`` flags.
+
+.. code-block:: console
+
+    pycred get STORE_NAME --username -n -p
+    pycred get --user ALT_USER STORE_NAME -p
+
+If no print-flags are specified, nothing is printed. This mode can be used to
+verify if a particular user exists in the store since the command will return exit code 0
+if the user exists.
 
 Unset
 -----
