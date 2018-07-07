@@ -7,5 +7,5 @@ class Credentials(object):
         :param username: Username
         :param password: Password
         """
-        self.username = username
-        self.password = password
+        self.username = username  #: Username
+        self.password = password  #: Password
