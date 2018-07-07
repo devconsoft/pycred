@@ -39,7 +39,9 @@ def info(ctx, names, format, users):
                 names=', '.join(names), format=format, users=users))
         config = ConfigurationManager()
         for name in names:
-            print(name)
+            print('name: {name}'.format(name=name))
+            path = config.get_store_config_filename(name)
+            print('config-file: {path}'.format(path=path))
             if format == 'std':
                 store_cfg = config.get_store_config(name)
                 print('encryption: {encryption}'.format(encryption=store_cfg.encryption.name))

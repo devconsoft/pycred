@@ -23,12 +23,13 @@ def test_info_std_format(pycred):
             pycred('init mystore --storage memory --encryption clear --serializer json')
             result = pycred('info mystore -f std')
             expected = """\
-mystore
+name: mystore
+config-file: {d}/mystore.yaml
 encryption: clear
 serializer: json
 storage: memory
-"""
-            assert result.stdout == expected
+""".format(d=d)
+            assert result.stdout == expected, result.stdout
 
 
 def test_info_raw_format(pycred):
@@ -48,7 +49,8 @@ def test_info_none_format(pycred):
         with patch.dict('os.environ', {'PYCRED_STORE_PATH': d}):
             pycred('init mystore --storage memory --encryption clear --serializer json')
             result = pycred('info mystore --format none')
-            assert result.stdout == 'mystore\n'
+            assert result.stdout == 'name: mystore\nconfig-file: {d}/mystore.yaml\n'.format(
+                d=d), result.stdout
 
 
 def test_info_users(pycred):
