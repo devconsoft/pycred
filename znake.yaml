@@ -32,7 +32,7 @@ znake:
   package_data:
     - package: pycred
       include:
-          - pycred/.config.yaml
+          - .config.yaml
   static:
     packages:
       - pycred

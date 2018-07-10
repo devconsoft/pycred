@@ -62,7 +62,7 @@ setup(
     
 
     package_data={
-        'pycred': ['pycred/.config.yaml'],
+        'pycred': ['.config.yaml'],
     },
 
 )
