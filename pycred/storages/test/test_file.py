@@ -1,5 +1,7 @@
+import os
+import tempfile
 import unittest
-from unittest.mock import mock_open, patch
+from unittest.mock import MagicMock, mock_open, patch
 
 from .. import GetDataFailed, InvalidUser, SetDataFailed, UnsetDataFailed
 from ..file import FileStorage
@@ -11,6 +13,8 @@ class TestFileStorage(unittest.TestCase):
 
     def get_filestorage(self):
         s = FileStorage('data_dir')
+        s._create_secure_file = MagicMock()
+        s._check_file_security = MagicMock()
         return s
 
     def test_get_data(self):
@@ -40,13 +44,13 @@ class TestFileStorage(unittest.TestCase):
         m.assert_called_with('data_dir')
 
     def test_get_data_raises_invaliduser_if_the_user_is_not_found(self):
-        s = FileStorage('/invalid/random/path')
+        s = self.get_filestorage()
         with self.assertRaises(InvalidUser):
             s.get_data('user')
 
     def test_get_data_raises_get_data_failed_for_permission_errors(self):
         with patch('builtins.open', side_effect=PermissionError()):
-            s = FileStorage('data_dir')
+            s = self.get_filestorage()
             with self.assertRaises(GetDataFailed):
                 s.get_data('user')
 
@@ -66,3 +70,26 @@ class TestFileStorage(unittest.TestCase):
         with patch('glob.glob', return_value=['data_dir/user2.dat', 'data_dir/user1.dat']):
             users = s.get_users()
         self.assertEqual(['user1', 'user2'], users)
+
+    def test_storage_file_created_with_correct_permissions(self):
+        with tempfile.TemporaryDirectory(prefix='pycred-') as d:
+            user = 'user'
+            fs = FileStorage(d)
+            path = fs.get_path(user)
+            self.assertFalse(
+                os.path.isfile(path), "Failed precondition, file '{path}' exists".format(path=path))
+            fs.set_data(user, 'data')
+            # Contains self-checks for permissions on creation.
+            assert os.path.isfile(path)
+
+    def test_storage_file_with_incorrect_permissions_raise_exception(self):
+        with tempfile.TemporaryDirectory(prefix='pycred-') as d:
+            user = 'user'
+            fs = FileStorage(d)
+            path = fs.get_path(user)
+            self.assertFalse(
+                os.path.isfile(path), "Failed precondition, file '{path}' exists".format(path=path))
+            with open(path, 'w+'):
+                pass
+            with self.assertRaises(GetDataFailed):
+                fs.get_data(user)

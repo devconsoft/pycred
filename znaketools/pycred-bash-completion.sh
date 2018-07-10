@@ -2,7 +2,7 @@
 _pycred_completion() {
     COMPREPLY=( $( env COMP_WORDS="${COMP_WORDS[*]}" \
                    COMP_CWORD=$COMP_CWORD \
-                   _ZK2_COMPLETE=complete $1 ) )
+                   _PYCRED_COMPLETE=complete $1 ) )
     return 0
 }
 

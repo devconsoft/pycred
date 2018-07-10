@@ -3,27 +3,37 @@ from abc import ABCMeta, abstractmethod
 
 class GetDataFailed(Exception):
     """Thrown if data could not be retrieved from storage."""
-    pass
+
+    def __init__(self, storage):
+        super().__init__('Get data failed in {storage}'.format(storage=storage))
 
 
 class SetDataFailed(Exception):
     """Thrown if data passed to storage could not be stored."""
-    pass
+
+    def __init__(self, storage):
+        super().__init__('Set data failed in {storage}'.format(storage=storage))
 
 
 class UnsetDataFailed(Exception):
     """Thrown if data for the specified user could not be unset (deleted)."""
-    pass
+
+    def __init__(self, storage):
+        super().__init__('Unset data failed in {storage}'.format(storage=storage))
 
 
 class InvalidUser(Exception):
     """Thrown if the specified user is invalid."""
-    pass
+
+    def __init__(self, storage):
+        super().__init__('Invalid user in {storage}'.format(storage=storage))
 
 
 class GetUsersFailed(Exception):
     """Thrown if the list of users could not be retrieved for the storage."""
-    pass
+
+    def __init__(self, storage):
+        super().__init__('Get users failed in {storage}'.format(storage=storage))
 
 
 class AbstractStorage(metaclass=ABCMeta):

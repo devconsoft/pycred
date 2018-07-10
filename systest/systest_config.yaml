@@ -17,8 +17,12 @@ ext.testscheduler.enabled: true
 ext.testresults.enabled: true
 ext.textreport.enabled: true
 ext.testngreport.enabled: true
+ext.signalhandler.enabled: true
 
 logdefaults.enabled: true
 ext.pycredcomponent.enabled: true
+ext.workspacecomponent.enabled: true
 
-log.info: [k2.extension.pycredcomponent]
+log.info:
+  - k2.extension.pycredcomponent
+  - k2.extension.workspacecomponent

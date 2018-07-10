@@ -1,5 +1,5 @@
-from k2.config.options import ConfigOptionId
-from k2.config.types import Path, Flag
+from zaf.config.options import ConfigOptionId
+from zaf.config.types import Path, Flag
 
 COVERAGE_ENABLED = ConfigOptionId(
     'coverage.enabled', 'Enables coverage measurement', option_type=Flag(), default=False)

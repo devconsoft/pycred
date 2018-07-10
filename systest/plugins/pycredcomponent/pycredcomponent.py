@@ -2,13 +2,13 @@ import logging
 import subprocess
 
 from k2.cmd.run import RUN_COMMAND
-from k2.component.decorator import component
-from k2.config.options import ConfigOption
-from k2.extensions.extension import AbstractExtension, CommandExtension, get_logger_name
+from zaf.component.decorator import component
+from zaf.config.options import ConfigOption
+from zaf.extensions.extension import AbstractExtension, CommandExtension, get_logger_name
 
 from . import COVERAGE_CONFIG_FILE, COVERAGE_ENABLED
 
-logger = logging.getLogger(get_logger_name('pycredcomponent'))
+logger = logging.getLogger(get_logger_name('k2', 'pycredcomponent'))
 logger.addHandler(logging.NullHandler())
 
 
