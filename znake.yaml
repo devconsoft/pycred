@@ -8,6 +8,10 @@ znake:
       PyCred is an application and python3 library that allow storing and retrieving
       user credentials for multiple systems.
     changelog:
+      - version: 0.1.0
+        changes:
+         - "Working clear encryption, file storage, json serializer"
+        date: Tue, 10 Jul 2018 20:00:00 +0000
       - version: 0.0.1
         changes:
           - "First draft"
