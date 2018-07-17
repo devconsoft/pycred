@@ -14,13 +14,13 @@ class JsonSerializer(AbstractSerializer):
     def serialize(self, credentials):
         try:
             data = [credentials.username, credentials.password]
-            return json.dumps(data)
+            return json.dumps(data).encode('utf-8')
         except Exception:
             raise SerializationFailed('JsonSerializer') from None
 
     def deserialize(self, data):
         try:
-            deserialized = json.loads(data)
+            deserialized = json.loads(data.decode('utf-8'))
             return Credentials(deserialized[0], deserialized[1])
         except Exception:
             raise DeserializationFailed('JsonSerializer') from None

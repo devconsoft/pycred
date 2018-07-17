@@ -4,6 +4,10 @@ encryptions: !PyCredBackendDefaultConfig
   default: 'clear'
   backends:
   - !BackendConfig
+    data:
+      key_path: '~/.pycred/data/%store%/encryption/aes/key.aes'
+    name: 'aes'
+  - !BackendConfig
     data: {}
     name: 'clear'
 serializers: !PyCredBackendDefaultConfig

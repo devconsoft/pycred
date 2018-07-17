@@ -110,7 +110,13 @@ class PyCredConfig(object):
 
 DEFAULT_PYCRED_CONFIG = PyCredConfig(
     '~/.pycred/store', PyCredBackendDefaultConfig('json', [BackendConfig('json', {})]),
-    PyCredBackendDefaultConfig('clear', [BackendConfig('clear', {})]),
+    PyCredBackendDefaultConfig(
+        'clear', [
+            BackendConfig('clear', {}),
+            BackendConfig('aes', {
+                'key_path': '~/.pycred/data/%store%/encryption/aes/key.aes'
+            })
+        ]),
     PyCredBackendDefaultConfig(
         'file', [
             BackendConfig('file', {

@@ -31,8 +31,9 @@ znake:
   requirements:
     - click==6.7
     - coloredlogs==5.1.1
-    - ruamel.yaml==0.15.40
+    - cryptography==2.2.2
     - py==1.5.3
+    - ruamel.yaml==0.15.40
   package_data:
     - package: pycred
       include:

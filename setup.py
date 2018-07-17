@@ -49,8 +49,9 @@ setup(
     install_requires=[
         'click',
         'coloredlogs',
-        'ruamel.yaml',
+        'cryptography',
         'py',
+        'ruamel.yaml',
     ],
 
     entry_points={

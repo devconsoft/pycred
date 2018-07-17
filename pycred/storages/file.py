@@ -1,10 +1,10 @@
 import glob
 import logging
 import os
-import shutil
 
 from . import AbstractStorage, GetDataFailed, InvalidUser, SetDataFailed, UnsetDataFailed
-from ..fs import InvalidFilePermissions, check_file_security, create_secure_file
+from ..fs import InvalidFilePermissions, check_file_security, create_secure_directory, \
+    create_secure_file, delete_unused_directory
 
 logger = logging.getLogger('FileStorage')
 logger.addHandler(logging.NullHandler())
@@ -19,7 +19,7 @@ class FileStorage(AbstractStorage):
         try:
             path = self.get_path(user)
             check_file_security(path)
-            with open(path, 'r') as f:
+            with open(path, 'rb') as f:
                 return f.read()
         except InvalidFilePermissions as e:
             logger.error(str(e))
@@ -32,13 +32,13 @@ class FileStorage(AbstractStorage):
     def set_data(self, user, data):
         try:
             path = self.get_path(user)
-            os.makedirs(os.path.dirname(path), mode=0o700, exist_ok=True)
             if not os.path.isfile(path):
+                create_secure_directory(os.path.dirname(path))
                 create_secure_file(path)
 
             check_file_security(path)
 
-            with open(path, 'w') as f:
+            with open(path, 'wb') as f:
                 f.write(data)
         except InvalidFilePermissions as e:
             logger.error(str(e))
@@ -57,9 +57,7 @@ class FileStorage(AbstractStorage):
         return os.path.join(self.data_dir, "{name}.dat".format(name=user))
 
     def delete(self):
-        path = self.data_dir
-        if os.path.isdir(path):
-            shutil.rmtree(path)
+        delete_unused_directory(self.data_dir)
         logger.debug('Deleted')
 
     def get_users(self):

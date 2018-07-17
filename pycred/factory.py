@@ -1,3 +1,4 @@
+from .encryptions.aes import AesEncryption
 from .encryptions.clear import ClearEncryption
 from .serializers.json import JsonSerializer
 from .storages.file import FileStorage
@@ -30,7 +31,7 @@ class Factory(object):
         return {'json': JsonSerializer}[name]
 
     def get_encryption_class_from_name(self, name):
-        return {'clear': ClearEncryption}[name]
+        return {'clear': ClearEncryption, 'aes': AesEncryption}[name]
 
     def get_storage_class_from_name(self, name):
         return {'file': FileStorage, 'memory': MemoryStorage}[name]

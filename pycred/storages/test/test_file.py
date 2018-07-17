@@ -9,7 +9,7 @@ from ..file import FileStorage
 
 class TestFileStorage(unittest.TestCase):
 
-    data = 'data'
+    data = b'data'
 
     def get_filestorage(self):
         fs = FileStorage('data_dir')
@@ -21,16 +21,17 @@ class TestFileStorage(unittest.TestCase):
         with patch('builtins.open', new_callable=mock_open, read_data=self.data) as m:
             fs = self.get_filestorage()
             result = fs.get_data('user')
-            m.assert_called_with('data_dir/user.dat', 'r')
+            m.assert_called_with('data_dir/user.dat', 'rb')
             self.assertEqual(self.data, result)
 
+    @patch('pycred.storages.file.create_secure_directory')
     @patch('pycred.storages.file.create_secure_file')
     @patch('pycred.storages.file.check_file_security')
-    def test_set_data(self, create_mock, check_mock):
-        with patch('builtins.open', new_callable=mock_open) as m, patch('os.makedirs'):
+    def test_set_data(self, create_dir_mock, create_file_mock, check_mock):
+        with patch('builtins.open', new_callable=mock_open) as m:
             fs = self.get_filestorage()
             fs.set_data('user', self.data)
-            m.assert_called_with('data_dir/user.dat', 'w')
+            m.assert_called_with('data_dir/user.dat', 'wb')
             m().write.assert_called_with(self.data)
 
     def test_unset_data(self):
@@ -39,13 +40,11 @@ class TestFileStorage(unittest.TestCase):
             fs.unset_data('user')
             m.assert_called_with('data_dir/user.dat')
 
-    @patch('pycred.storages.file.create_secure_file')
-    @patch('pycred.storages.file.check_file_security')
-    def test_delete(self, create_mock, check_mock):
+    @patch('pycred.storages.file.delete_unused_directory')
+    def test_delete(self, delete_mock):
         fs = self.get_filestorage()
-        with patch('shutil.rmtree') as m, patch('os.path.isdir', return_value=True):
-            fs.delete()
-        m.assert_called_with('data_dir')
+        fs.delete()
+        delete_mock.assert_called_with('data_dir')
 
     @patch('pycred.storages.file.create_secure_file')
     @patch('pycred.storages.file.check_file_security')
@@ -88,7 +87,7 @@ class TestFileStorage(unittest.TestCase):
             path = fs.get_path(user)
             self.assertFalse(
                 os.path.isfile(path), "Failed precondition, file '{path}' exists".format(path=path))
-            fs.set_data(user, 'data')
+            fs.set_data(user, self.data)
             # Contains self-checks for permissions on creation.
             assert os.path.isfile(path)
 

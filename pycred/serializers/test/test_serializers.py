@@ -8,7 +8,7 @@ from ..json import JsonSerializer
 
 class TestJsonSerializer(unittest.TestCase):
 
-    serialized_data = '["USERNAME", "PASSWORD"]'
+    serialized_data = b'["USERNAME", "PASSWORD"]'
 
     def test_serialize(self):
         s = JsonSerializer()
